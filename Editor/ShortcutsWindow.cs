@@ -9,18 +9,6 @@ using UnityEngine;
 
 public class ShortcutsWindow : EditorWindow
 {
-    private static (string, string)[] _folders = new (string, string)[]
-    {
-        ("Units", "Assets/Prefabs/Units"),
-        ("Levels", "Assets/Scenes/Levels"),
-        ("Settings", "Assets/Settings"),
-        ("Prefabs", "Assets/Prefabs"),
-        ("Animations", "Assets/Animations"),
-        ("Textures", "Assets/Textures"),
-        ("Materials", "Assets/Materials"),
-        ("Characters Models", "Assets/Models/Characters"),
-    };
-
     private static MethodInfo _getInstanceIDMethod;
 
     static ShortcutsWindow()
@@ -29,7 +17,7 @@ public class ShortcutsWindow : EditorWindow
             BindingFlags.Static | BindingFlags.NonPublic);
     }
 
-    private ReorderableList _levelsList;
+    private ReorderableList _shortcutsList;
     private List<Shortcut> _shortcuts = new List<Shortcut>();
 
     [MenuItem("Window/Shortcuts")]
@@ -43,12 +31,12 @@ public class ShortcutsWindow : EditorWindow
     public void OnEnable()
     {
         LoadList();
-        _levelsList = new ReorderableList(_shortcuts, typeof(string), true, true, true, true);
-        _levelsList.drawHeaderCallback = DrawLevelsHeader;
-        _levelsList.drawElementCallback = DrawListElement;
-        _levelsList.onAddCallback = AddToList;
-        _levelsList.onRemoveCallback = SaveList;
-        _levelsList.onReorderCallback = SaveList;
+        _shortcutsList = new ReorderableList(_shortcuts, typeof(string), true, true, true, true);
+        _shortcutsList.drawHeaderCallback = DrawLevelsHeader;
+        _shortcutsList.drawElementCallback = DrawListElement;
+        _shortcutsList.onAddCallback = AddToList;
+        _shortcutsList.onRemoveCallback = RemoveFromList;
+        _shortcutsList.onReorderCallback = SaveList;
     }
 
     void DrawLevelsHeader(Rect rect)
@@ -58,27 +46,34 @@ public class ShortcutsWindow : EditorWindow
 
     void DrawListElement(Rect rect, int index, bool isActive, bool isFocused)
     {
-        if (index >= _levelsList.list.Count)
+        if (index >= _shortcutsList.list.Count)
             return;
-        var shortcut = (Shortcut)_levelsList.list[index];
-        shortcut.Name = EditorGUI.TextArea(new Rect(rect.x, rect.y, 80, rect.height - 2), shortcut.Name);
-        shortcut.Path = EditorGUI.TextArea(new Rect(rect.x + 84, rect.y, rect.width - 82, rect.height - 2), shortcut.Path);
+        var shortcut = (Shortcut)_shortcutsList.list[index];
+        shortcut.Name = EditorGUI.TextArea(new Rect(rect.x, rect.y + 2, 80, rect.height - 4), shortcut.Name);
+        shortcut.Path = EditorGUI.TextArea(new Rect(rect.x + 84, rect.y + 2, rect.width - 84, rect.height - 4), shortcut.Path);
         if (shortcut.Edited)
             shortcut.Save();
     }
 
     private void AddToList(ReorderableList _)
     {
-
         var shortcut = new Shortcut();
         _shortcuts.Add(shortcut);
         SaveList(_);
         shortcut.Save();
     }
 
+    private void RemoveFromList(ReorderableList _)
+    {
+        var shortcut = _shortcuts[_shortcutsList.index];
+        _shortcuts.RemoveAt(_shortcutsList.index);
+        SaveList(_);
+        shortcut.Delete();
+    }
+
     private void LoadList()
     {
-        var shortcuts = EditorPrefs.GetString("shortcuts").Split(';');
+        var shortcuts = EditorPrefs.GetString($"{Application.identifier}-shortcuts").Split(';');
         _shortcuts.Clear();
         _shortcuts.AddRange(shortcuts.Where(s => s != "").Select(s => new Shortcut(s)));
     }
@@ -86,7 +81,7 @@ public class ShortcutsWindow : EditorWindow
     private void SaveList(ReorderableList _)
     {
         var shortcuts = string.Join(";", _shortcuts.Select(s => s.Id));
-        EditorPrefs.SetString("shortcuts", shortcuts);
+        EditorPrefs.SetString($"{Application.identifier}-shortcuts", shortcuts);
     }
 
     void OnGUI()
@@ -96,7 +91,7 @@ public class ShortcutsWindow : EditorWindow
                 if (GUILayout.Button(entry.Name))
                     ShowFolderContents((int)_getInstanceIDMethod.Invoke(null, new object[] { System.IO.Path.Combine("Assets", entry.Path) }));
 
-        _levelsList.DoLayoutList();
+        _shortcutsList.DoLayoutList();
     }
 
     public class Shortcut
@@ -164,6 +159,11 @@ public class ShortcutsWindow : EditorWindow
         {
             EditorPrefs.SetString(Id, $"{Name};{Path}");
             Edited = false;
+        }
+
+        public void Delete()
+        {
+            EditorPrefs.DeleteKey(Id);
         }
     }
 
