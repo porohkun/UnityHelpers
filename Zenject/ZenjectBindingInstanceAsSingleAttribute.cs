@@ -18,7 +18,7 @@ namespace Zenject
         private static void InstallGameObject(GameObject go, DiContainer container)
         {
             var instances = go.GetComponents<Component>()
-                .Where(c => c.GetType().CustomAttributes.Any(a => a.AttributeType == typeof(ZenjectBindingInstanceAsSingleAttribute)))
+                .Where(c => c != null && c.GetType().CustomAttributes.Any(a => a.AttributeType == typeof(ZenjectBindingInstanceAsSingleAttribute)))
                 .ToArray();
             container.BindInstances(instances);
 
