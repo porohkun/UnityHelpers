@@ -1,9 +1,9 @@
 {
   "name": "unity_helpers",
   "displayName": "Helpers",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "unity": "2019.1",
-  "description": "TMy favorite helpers",
+  "description": "My favorite helpers",
   "keywords": [
     "unity"
   ],
