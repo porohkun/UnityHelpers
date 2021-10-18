@@ -9,6 +9,11 @@ namespace UnityEngine
         {
             return new Vector3(vector.x * x, vector.y * y, vector.z * z);
         }
+        
+        public static Vector2 Scaled(this Vector2 vector, float x, float y)
+        {
+            return new Vector2(vector.x * x, vector.y * y);
+        }
 
         /// <summary>
         /// {X, Z}
