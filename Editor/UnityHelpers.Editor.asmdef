@@ -1,0 +1,11 @@
+{
+    "name": "UnityHelpers-Editor",
+    "rootNamespace": "",
+    "references": [
+        "UnityHelpers"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": []
+}
