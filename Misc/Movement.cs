@@ -4,22 +4,22 @@ namespace Helpers
 {
     public static class Movement
     {
-        public static Vector3 LinearMove(Vector3 position, Vector3 target, float speed, out bool stopped, float deltaTime, float stopAccuracy = 0.01f)
+        public static Vector3 LinearMove(Vector3 position, Vector3 target, float speed, out bool moved, float deltaTime, float stopAccuracy = 0.01f)
         {
             var fakeDirection = Vector3.zero;
-            return LinearMove(position, target, ref fakeDirection, speed, out stopped, deltaTime, 1, stopAccuracy);
+            return LinearMove(position, target, ref fakeDirection, speed, out moved, deltaTime, 1, stopAccuracy);
         }
 
-        public static Vector2 LinearMove(Vector2 position, Vector2 target, float speed, out bool stopped, float deltaTime, float stopAccuracy = 0.01f)
+        public static Vector2 LinearMove(Vector2 position, Vector2 target, float speed, out bool moved, float deltaTime, float stopAccuracy = 0.01f)
         {
             var fakeDirection = Vector2.zero;
-            return LinearMove(position, target, ref fakeDirection, speed, out stopped, deltaTime, 1, stopAccuracy);
+            return LinearMove(position, target, ref fakeDirection, speed, out moved, deltaTime, 1, stopAccuracy);
         }
 
-        public static float LinearMove(float position, float target, float speed, out bool stopped, float deltaTime, float stopAccuracy = 0.01f)
+        public static float LinearMove(float position, float target, float speed, out bool moved, float deltaTime, float stopAccuracy = 0.01f)
         {
             var fakeDirection = 0f;
-            return LinearMove(position, target, ref fakeDirection, speed, out stopped, deltaTime, 1, stopAccuracy);
+            return LinearMove(position, target, ref fakeDirection, speed, out moved, deltaTime, 1, stopAccuracy);
         }
 
         public static Vector3 LinearMove(Vector3 position, Vector3 target, ref Vector3 direction, float speed, out bool moved, float deltaTime, float turnPower = 1f, float stopAccuracy = 0.01f)
