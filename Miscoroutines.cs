@@ -21,5 +21,20 @@ public static class Miscoroutines
         yield return new WaitWhile(predicate);
         callback?.Invoke();
     }
-}
 
+    public static IEnumerator Tween(float duration, Action<float> progress, Action completed)
+    {
+        var time = 0f;
+        var maxTime = duration;
+        do
+        {
+            yield return null;
+            time += Time.deltaTime;
+            var t = time / maxTime;
+
+            progress?.Invoke(t);
+        }
+        while (time <= maxTime);
+        completed?.Invoke();
+    }
+}

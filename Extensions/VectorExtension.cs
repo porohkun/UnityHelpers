@@ -9,7 +9,7 @@ namespace UnityEngine
         {
             return new Vector3(vector.x * x, vector.y * y, vector.z * z);
         }
-        
+
         public static Vector2 Scaled(this Vector2 vector, float x, float y)
         {
             return new Vector2(vector.x * x, vector.y * y);
@@ -43,6 +43,11 @@ namespace UnityEngine
         public static Vector3 SetY(this Vector3 vector, float y)
         {
             return new Vector3(vector.x, y, vector.z);
+        }
+
+        public static Vector3 ToVector3(this Vector2 vector, float z = 0f)
+        {
+            return new Vector3(vector.x, vector.y, z);
         }
 
         public static float DistanceTo(this Vector3 vector, Vector3 other)
